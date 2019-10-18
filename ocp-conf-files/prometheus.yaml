@@ -1,0 +1,28 @@
+apiVersion: v1
+items:
+- apiVersion: monitoring.coreos.com/v1
+  kind: Prometheus
+  metadata:
+    labels:
+      prometheus: k8s
+    name: cachet
+    namespace: cachet
+    selfLink: /apis/monitoring.coreos.com/v1/namespaces/cachet/prometheuses/cachet
+  spec:
+    alerting:
+      alertmanagers:
+      - name: alertmanager-cachet
+        namespace: cachet
+        port: web
+    replicas: 2
+    ruleSelector: {}
+    securityContext: {}
+    serviceAccountName: prometheus-k8s
+    serviceMonitorSelector:
+      matchLabels:
+        app: black-box-runner
+    version: v2.7.1
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""

@@ -1,0 +1,151 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: black-box-runner-template
+
+parameters:
+- name: NAMESPACE
+  value: The namespace we are deploying to
+- name: LOG_LEVEL
+  value: INFO
+- name: SINGLE_PLUGIN
+  value: ""
+
+objects:
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: iqe-tests
+  spec:
+    tags:
+      - name: 'latest'
+        from:
+          kind: DockerImage
+          name: 'quay.io/cloudservices/iqe-tests:latest'
+
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: black-box-runner-svc-acct
+
+- apiVersion: v1
+  kind: RoleBinding
+  metadata:
+    labels:
+      application: black-box-runner
+    name: edit
+  roleRef:
+    name: edit
+  subjects:
+  - kind: ServiceAccount
+    name: black-box-runner-svc-acct
+    namespace: ${NAMESPACE}
+
+- apiVersion: apps.openshift.io/v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: black-box-runner
+    name: black-box-runner
+  spec:
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      app: black-box-runner
+      deploymentconfig: black-box-runner
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          app: black-box-runner
+          deploymentconfig: black-box-runner
+      spec:
+        serviceAccountName: black-box-runner-svc-acct
+        volumes:
+        - name: black-box-runner-src
+          configMap:
+            name: black-box-runner
+        containers:
+        - image: iqe-tests:latest
+          imagePullPolicy: Always
+          name: black-box-runner
+          env:
+          - name: SINGLE_PLUGIN
+            value: ${SINGLE_PLUGIN}
+          - name: OPENSHIFT_NAMESPACE
+            value: ${NAMESPACE}
+          - name: LOG_LEVEL
+            value: ${LOG_LEVEL}
+          - name: IQE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                key: username
+                name: iqe-creds
+          - name: IQE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: iqe-creds
+        - name: IQE_ACCOUNT_NUMBER
+          valueFrom:
+            secretKeyRef:
+              key: accountNumber
+              name: iqe-creds
+          command:
+          - "/bin/sh"
+          - "-c"
+          - "python /black-box-runner/runner.py"
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: '1'
+              memory: 1Gi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - name: black-box-runner-src
+            mountPath: /black-box-runner
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - type: ConfigChange
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        from:
+          kind: "ImageStreamTag"
+          name: "iqe-tests:latest"
+        containerNames:
+          - "black-box-runner"
+
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: black-box-runner
+    name: black-box-runner
+  spec:
+    ports:
+    - name: "8000"
+      port: 8000
+      protocol: TCP
+      targetPort: 8000
+    selector:
+      app: black-box-runner
+    sessionAffinity: None
+    type: ClusterIP

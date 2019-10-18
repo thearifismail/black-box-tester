@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: selenium-template
+
+parameters:
+- name: NAME
+  value: selenium
+  description: Deployment name
+
+objects:
+- apiVersion: apps.openshift.io/v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: selenium
+    name: ${NAME}
+  spec:
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      app: selenium
+      deploymentconfig: ${NAME}
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          app: selenium
+          deploymentconfig: ${NAME}
+      spec:
+        containers:
+        - name: selenium
+          image: quay.io/redhatqe/selenium-standalone:latest
+          imagePullPolicy: IfNotPresent
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /wd/hub
+              port: 4444
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 10
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 1Gi
+    test: false
+    triggers:
+    - type: ConfigChange

@@ -1,0 +1,24 @@
+prod:
+  main:
+    default_user: primary_user
+    # These values are overriden via an openshift secret
+    username: "changeme"
+    password: "changeme"
+    identity:
+      account_number: "changeme"
+
+  browser:
+    webdriver: Remote
+    webdriver_options:
+      desired_capabilities:
+        acceptInsecureCerts: true
+        browserName: chrome
+        marionette: true
+
+  users:
+    primary_user:
+      # These values are overriden via an openshift secret
+      username: "changeme"
+      password: "changeme"
+      identity:
+        account_number: "changeme"

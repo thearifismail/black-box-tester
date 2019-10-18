@@ -1,0 +1,76 @@
+apiVersion: v1
+stringData:
+  alertmanager.yaml: |
+    global:
+      # The smarthost and SMTP sender used for mail notifications.
+      smtp_smarthost: 'localhost:25'
+      smtp_from: 'alertmanager@example.org'
+      smtp_auth_username: 'alertmanager'
+      smtp_auth_password: 'password'
+      pagerduty_url: https://events.pagerduty.com/v2/enqueue
+      hipchat_api_url: https://api.hipchat.com/
+      opsgenie_api_url: https://api.opsgenie.com/
+      wechat_api_url: https://qyapi.weixin.qq.com/cgi-bin/
+      victorops_api_url: https://alert.victorops.com/integrations/generic/20131114/alert/
+
+    # The directory from which notification templates are read.
+    templates: 
+      - '/etc/alertmanager/template/*.tmpl'
+
+    # The root route on which each incoming alert enters.
+    route:
+      receiver: slack
+      group_by: 
+      - cluster
+
+      routes:
+      - match:
+          severity: normal
+        receiver: slack
+
+      - match:
+          severity: critical
+        receiver: pagerduty
+
+    receivers:
+    - name: pagerduty
+      pagerduty_configs:
+        - service_key: "KEY"
+          send_resolved: true
+          http_config: {}
+          url: https://events.pagerduty.com/v2/enqueue
+          client: '{{ template "pagerduty.default.client" . }}'
+          client_url: '{{ template "pagerduty.default.clientURL" . }}'
+          description: '{{ template "pagerduty.default.description" .}}'
+          details:
+            firing: '{{ template "pagerduty.default.instances" .Alerts.Firing }}'
+            num_firing: '{{ .Alerts.Firing | len }}'
+            num_resolved: '{{ .Alerts.Resolved | len }}'
+            resolved: '{{ template "pagerduty.default.instances" .Alerts.Resolved }}'
+    - name: slack
+      slack_configs:
+        - send_resolved: false
+          http_config: {}
+          api_url: "SLACK_HOOKS_URL"
+          channel: '#insights-sre-alerts'
+          username: '{{ template "slack.default.username" . }}'
+          color: '{{ if eq .Status "firing" }}danger{{ else }}good{{ end }}'
+          title: |-
+            {{ range .Alerts }}{{ .Annotations.summary }}
+            {{ end }}
+          title_link: '{{ template "slack.default.titlelink" . }}'
+          pretext: '{{ template "slack.default.pretext" . }}'
+          text: |-
+            {{ range .Alerts }}{{ .Annotations.description }}
+            {{ end }}
+          footer: '{{ template "slack.default.footer" . }}'
+          fallback: '{{ template "slack.default.fallback" . }}'
+          callback_id: '{{ template "slack.default.callbackid" . }}'
+          icon_emoji: '{{ template "slack.default.iconemoji" . }}'
+          icon_url: '{{ template "slack.default.iconurl" . }}'
+
+kind: Secret
+metadata:
+  name: alertmanager-alertmanager-cachet
+  namespace: cachet
+type: Opaque
