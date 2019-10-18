@@ -95,11 +95,11 @@ objects:
               secretKeyRef:
                 key: password
                 name: iqe-creds
-        - name: IQE_ACCOUNT_NUMBER
-          valueFrom:
-            secretKeyRef:
-              key: accountNumber
-              name: iqe-creds
+          - name: IQE_ACCOUNT_NUMBER
+            valueFrom:
+              secretKeyRef:
+                key: accountNumber
+                name: iqe-creds
           command:
           - "/bin/sh"
           - "-c"

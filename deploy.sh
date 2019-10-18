@@ -64,7 +64,8 @@ oc process -p LOG_LEVEL="${LOG_LEVEL}" -p NAMESPACE="${NAMESPACE}" -f runner-tem
 oc process -f selenium-template.yaml | oc apply -f -
 oc secrets link default cloudservices-black-box-pull-secret --for=pull
 oc secrets link black-box-runner-svc-acct cloudservices-black-box-pull-secret --for=pull
-oc import-image iqe-tests --from="quay.io/cloudservices/iqe-tests" --confirm --scheduled=true
+oc import-image iqe-tests:latest --from="quay.io/cloudservices/iqe-tests:latest"
+oc tag quay.io/cloudservices/iqe-tests:latest iqe-tests:latest --scheduled=true
 REVISION=$(oc rollout latest dc/black-box-runner --output=jsonpath='{.status.latestVersion}')
 if [ -z "${REVISION}" ]; then
     oc rollout status dc/black-box-runner
