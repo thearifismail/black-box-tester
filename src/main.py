@@ -9,6 +9,7 @@ as well as to cleanly segment the test runs for prometheus.
 """
 import logging
 import signal
+import time
 
 from ocdeployer.utils import switch_to_project
 from prometheus_client import start_http_server
@@ -39,19 +40,19 @@ def get_groups(l, n):
 
 def main():
     logging.basicConfig(
-        level=config.LOG_LEVEL,
-        format="%(asctime)s %(name)s:%(levelname)s %(message)s",
+        level=config.LOG_LEVEL, format="%(asctime)s %(name)s:%(levelname)s %(message)s"
     )
     logging.getLogger("sh").setLevel(logging.CRITICAL)
 
     pod_mgr = SeleniumPodMgr()
 
     # Create runners and split the plugins across them
+    initial_run_id = int(time.time())
     plugin_groups = get_groups(config.PLUGINS, config.MAX_RUNNERS)
     for i, plugin_group in enumerate(plugin_groups):
         if plugin_group:
             runner_name = f"runner-{i}"
-            RUNNERS.append(IqeRunner(runner_name, plugin_group, pod_mgr))
+            RUNNERS.append(IqeRunner(runner_name, plugin_group, pod_mgr, run_id=initial_run_id))
 
     # Ensure number of selenium pods matches number runners
     switch_to_project(config.NAMESPACE)
