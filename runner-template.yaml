@@ -103,7 +103,7 @@ objects:
           command:
           - "/bin/sh"
           - "-c"
-          - "python /black-box-runner/runner.py"
+          - "python /black-box-runner/main.py"
           resources:
             requests:
               cpu: 250m
