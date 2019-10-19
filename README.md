@@ -16,12 +16,13 @@ First, switch into the project you want to deploy into:
 oc project <my_project>
 ```
 
-Collect the username/password for the Insights prod account that these tests should use. The latest username/password can be obtained from the QE team.
+Collect the username/password/account id for the Insights prod account that these tests should use. The latest username/password can be obtained from the QE team.
 
-Convert the username/password into base64:
+Convert the username/password/account id into base64:
 ```
-echo "my_username" | base64
-echo "my_password" | base64
+echo -n "my_username" | base64 -w 0
+echo -n "my_password" | base64 -w 0
+echo -n "my_account" | base64 -w 0
 ```
 
 Edit the iqe creds secret and update the username/password:
