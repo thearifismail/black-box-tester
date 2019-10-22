@@ -184,7 +184,7 @@ class IqeRunner(threading.Thread):
                 if not plugin.last_completion or self._delay_passed(plugin):
                     self.run_plugin(plugin)
                 else:
-                    log.debug("[%s|run:%d] skipping due to time delay", self._run_id, plugin.name)
+                    log.debug("[%s|run:%d] skipping due to time delay", plugin.name, self._run_id)
             time.sleep(1)
 
     def stop(self):
