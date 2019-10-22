@@ -12,7 +12,7 @@ prod:
     webdriver_options:
       desired_capabilities:
         acceptInsecureCerts: true
-        browserName: firefox
+        browserName: chrome
         marionette: true
 
   users:
