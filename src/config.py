@@ -23,18 +23,18 @@ if SINGLE_PLUGIN:
 else:
     PLUGINS = [
         # (Plugin name, pytest marker)
-        #("akamai", None),
+        ("akamai", None),
         ("advisor", "prod_status"),
         ("platform_ui", "prod_status"),
         ("approval", "prod_status"),
         ("sources", "prod_status"),
         ("topology_inventory", "prod_status"),
-        #("clientv3", "prod_status"),
-        #("compliance", "prod_status"),
-        #("drift", "prod_status"),
-        #("hccm", "prod_status"),
+        ("clientv3", "prod_status"),
+        ("compliance", "prod_status"),
+        ("drift", "prod_status"),
+        ("hccm", "prod_status"),
         ("host_inventory", "prod_status"),
-        #("rbac", "prod_status"),
-        #("upload", "prod_status"),
+        ("rbac", "prod_status"),
+        ("upload", "prod_status"),
         ("vulnerability", "prod_status"),
     ]
