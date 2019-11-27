@@ -43,7 +43,7 @@ class Plugin:
         self.duration = DURATION_COUNTER.labels(plugin=self.name)
         self.last_start = 0.0
         self.last_completion = 0.0
-        self._run_id = 0
+        self._run_id = int(time.time())  # use int of time to ensure an ever-increasing unique number
 
         self.env = os.environ.copy()
         # Pass configuration into IQE via env var (instead of using a settings.local.yaml)
