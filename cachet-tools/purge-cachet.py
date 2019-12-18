@@ -3,7 +3,6 @@
 import requests
 import os
 import json
-import pprint
 
 CACHET_HOSTNAME = os.environ.get("CACHET_HOSTNAME")
 URL = f"https://{CACHET_HOSTNAME}/api/v1/components"
