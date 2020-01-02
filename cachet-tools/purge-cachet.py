@@ -28,7 +28,7 @@ with requests.Session() as session:
         print("Deleting group " + group['name'])
         gdr = session.delete(URL + "/groups/" + str(group['id']), verify=False, )
         print(gdr)
-    
+
     # check and delete components not in any groups
     response = session.get(URL, verify=False)
     components = response.json()['data']
