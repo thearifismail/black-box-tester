@@ -14,33 +14,29 @@ with requests.Session() as session:
     session.headers.update(HEADERS)
 
     response = session.get(URL  + "/groups", verify=False)
+    groups   = response.json()['data']
+    print("Number of groups found: " + str(len(groups)))
 
-    if (response.status_code >= 200 and response.status_code <= 299):
-        groups   = response.json()['data']
-        print("Number of groups found: " + str(len(groups)))
-
-        for group in groups:
-            components = group['enabled_components']
-            print(group['name'] + " contains " + str(len(components)) + " components")
-            for component in components:
-                print("Deleting component: " + component['name'])
-                cdr = session.delete(URL + "/" + str(component['id']), verify=False, )
-                print (cdr)
-                # delete the group
-                print("Deleting group " + group['name'])
-                gdr = session.delete(URL + "/groups/" + str(group['id']), verify=False, )
-                print(gdr)
-
-        # check and delete components not in any groups
-        response = session.get(URL, verify=False)
-        components = response.json()['data']
-        print("Number of components not in any group: " + str(len(components)))
-
+    for group in groups:
+        components = group['enabled_components']
+        print(group['name'] + " contains " + str(len(components)) + " components")
         for component in components:
             print("Deleting component: " + component['name'])
             cdr = session.delete(URL + "/" + str(component['id']), verify=False, )
             print (cdr)
+        # delete the group
+        print("Deleting group " + group['name'])
+        gdr = session.delete(URL + "/groups/" + str(group['id']), verify=False, )
+        print(gdr)
+    
+    # check and delete components not in any groups
+    response = session.get(URL, verify=False)
+    components = response.json()['data']
+    print("Number of components not in any group: " + str(len(components)))
 
-        print("Done!!!")
-    else:
-        print ("Can not get components list from Cachet.  Got HTTP response code: " + str(response.status_code))
+    for component in components:
+        print("Deleting component: " + component['name'])
+        cdr = session.delete(URL + "/" + str(component['id']), verify=False, )
+        print (cdr)
+
+    print("Done!!!")
