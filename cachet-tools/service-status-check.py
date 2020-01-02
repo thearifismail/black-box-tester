@@ -10,30 +10,30 @@ INSIGHTS_SERVER   = os.environ.get("INSIGHTS_SERVER")
 
 API_URL           = f"https://{INSIGHTS_SERVER}/api"
 
-services = [                        # Service names in GUI
-        "apicast-tests",            # APICast Tests
-        "approval",                 # Approval",
-        "automation-hub",           # Automation Hub
-        "catalog",                  # Catalog",
-        "compliance",               # Compliance
-        "cost-anagement",           # Cost Management,
-        "drift",                    # Drift
-        "echo",                     # Echo
-        "entitlements",             # Entitlements
-        "hooks",                    # Hooks
-        "ingress",                  # Ingress
-        "insights",                 # Insights
-        "inventory",                # Inventory
-        "rbac",                     # Rbac
-        "remediations",             # Remediations
-        "rhsm-subscriptions",       # Rhsm Subscriptions
-        "sources",                  # Sources
-        "subscriptions",            # Subscriptions
-        "system-baseline",          # System Baseline
-        "topological-inventory",    # Topological Inventory
-        "tower-analytics",          # Tower Analytics
-        "vulnerability",            # Vulnerability
-        "webhooks"                  # Webhooks
+services = [                        
+        "apicast-tests",
+        "approval",
+        "automation-hub",
+        "catalog",
+        "compliance",
+        "cost-anagement",
+        "drift",
+        "echo",
+        "entitlements",
+        "hooks",
+        "ingress",
+        "insights",
+        "inventory",
+        "rbac",
+        "remediations",
+        "rhsm-subscriptions",
+        "sources",
+        "subscriptions",
+        "system-baseline",
+        "topological-inventory",
+        "tower-analytics",
+        "vulnerability",
+        "webhooks"
     ]
 
 with requests.Session() as session:
