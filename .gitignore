@@ -105,3 +105,4 @@ venv.bak/
 
 # tmp folder for trying out different things.
 tmp/
+.vscode/
