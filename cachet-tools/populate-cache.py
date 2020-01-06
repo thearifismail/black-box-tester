@@ -14,62 +14,6 @@ HEADERS = {
 logging.basicConfig(level='INFO', format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p: ')
 logger = logging.getLogger(__name__)
 
-'''
-groups = {
-    "Cloud Services Applications": [
-        "Cost Management",
-        "Approval",
-        "Catalog",
-        "Cloudigrade",
-        "Compliance",
-        "Drift",
-        "Entitlements",
-        "Hooks",
-        "Ingress",
-        "Inventory",
-        "Rbac",
-        "Remediations",
-        "Rhsm Subscriptions",
-        "Sources",
-        "Subscriptions",
-        "Topological Inventory",
-        "Vulnerability",
-        "Webhooks",
-        "APICast Tests"
-    ],
-    "Cloud Services Platform": [
-        "3scale",
-        "Kafka",
-        "Prometheus",
-        "Alert Manager",
-        "Grafana",
-        "OC Logs",
-        "Elastic Search Exporter",
-        "Legacy Infrastructure",
-        "Payload Tracker",
-    ],
-    "Amazon Web Services": [
-        "Elastic Search",
-        "CloudWatch Lambda Service",
-        "RDS",
-        "S3",
-    ],
-    "Akamai": [
-        "Akamai",
-        "Fakamai"
-    ],
-    "OSD": [
-        "Prod Cluster",
-        "Dev Cluster"
-    ],
-    "IT Managed Services": [
-        "BOP",
-        "SSO",
-        "Entitlements"
-    ]
-}
-'''
-
 groups = {
     "Cloud Services Applications": [
         "webhooks",
