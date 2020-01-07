@@ -11,7 +11,7 @@ HEADERS = {
 }
 
 # setup log format
-logging.basicConfig(level='INFO', format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p: ')
+logging.basicConfig(level='INFO', format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %H:%M:%S %p: ')
 logger = logging.getLogger(__name__)
 
 groups = {
