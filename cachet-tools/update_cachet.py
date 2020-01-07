@@ -14,6 +14,7 @@ import json
 import os
 import logging
 import requests
+import time
 
 # target cachet listing insights services 
 CACHET_HOSTNAME = os.environ.get("CACHET_HOSTNAME")
@@ -85,7 +86,7 @@ def get_session():
 
 # check status
 def update_all_services():
-    logger.info("Starting status updated ...")
+    logger.info("Starting services status check ...")
 
     # session = requests.Session()
     session.headers.update(HEADERS)
@@ -100,7 +101,7 @@ def update_all_services():
             components = group['enabled_components']
             logger.info("Starting to check each of " + str(len(components)) + " components in group \"" + group['name'] + "\"")
             for component in components:
-                # assuming the component in the group is accessible
+                # assuming the component in the parent group is accessible because it showed up.
                 svc_status = get_service_status(component['name'])
                 update_svc = set_svc_status(component['id'], svc_status)
                 if update_svc:
@@ -153,7 +154,10 @@ def set_svc_status(id, status):
 # end of def set_svc_status
 
 def main():
-    update_all_services()
+    while True:
+        update_all_services()
+        logger.info("Goging to sleep for 5 minutes ...")
+        time.sleep(300)
 
 if __name__ == '__main__':
    logger.info ("Let's kick the pig!")
