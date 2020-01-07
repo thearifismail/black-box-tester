@@ -18,7 +18,7 @@ import requests
 # target cachet listing insights services 
 CACHET_HOSTNAME = os.environ.get("CACHET_HOSTNAME")
 CACHET_TOKEN    = os.getenv("CACHET_TOKEN")
-URL             = f"https://{CACHET_HOSTNAME}/api/v1/components"
+CACHET_URL      = f"https://{CACHET_HOSTNAME}/api/v1/components"
 HEADERS         = { 'X-Cachet-Token': os.environ.get("CACHET_TOKEN") }
 
 # insights server hosting live services status
@@ -27,14 +27,17 @@ INSIGHTS_PASSWORD = os.getenv("INSIGHTS_PASSWORD")
 INSIGHTS_SERVER   = os.getenv("INSIGHTS_SERVER")
 API_URL           = f"https://{INSIGHTS_SERVER}/api"
 
+# format the logger message
 logging.basicConfig(level='INFO', format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p: ')
 logger = logging.getLogger(__name__)
 
-# check status
+session = requests.Session()
+
+'''# check status
 def check_status():
     logger.info("Entring check_status ...")
     
-    with requests.Session() as session: # try with session 1 and session 2
+    with requests.Session() as session:
         session.headers.update(HEADERS)
 
         response = session.get(URL  + "/groups", verify=False)
@@ -75,12 +78,83 @@ def check_status():
                         logging.exception(update_exception)
                     # end of if response_code
     logger.info("Done!!!")
+'''
+# session used by every request, only URLs and args will change
+def get_session():
+    return requests.Session()
+
+# check status
+def update_all_services():
+    logger.info("Starting status updated ...")
+
+    # session = requests.Session()
+    session.headers.update(HEADERS)
+
+    # TODO:  add exception handling and check if except: can catch every exception if none specified to catch
+    try:
+        response = session.get(CACHET_URL + "/groups", verify=False)
+        groups   = response.json()['data']
+        logger.info("Number of groups found: " + str(len(groups)))
+
+        for group in groups:  # for somereason not using groups returns 20 components but should return 23
+            components = group['enabled_components']
+            logger.info("Starting to check each of " + str(len(components)) + " components in group \"" + group['name'] + "\"")
+            for component in components:
+                # assuming the component in the group is accessible
+                svc_status = get_service_status(component['name'])
+                update_svc = set_svc_status(component['id'], svc_status)
+                if update_svc:
+                    logger.info("Successfully updated status of \"" + component['name'] + "\" service")
+                else:
+                    logger.error("Failed to updated status of \"" + component['name'] + "\" service")
+            # end of for components loop
+        # end of for groups loop
+    except Exception as ex:
+        logger.exception(ex)
+    # end of try/except block
+
+    logger.info("Done updating all services!!!")
+# end of def update_all_services
+
+def get_service_status(name):
+    result = True # set to False if exception thrown
+    url = API_URL + "/" + name + "/v1/"
+    try:
+        response = session.get(url, auth=(INSIGHTS_USERNAME, INSIGHTS_PASSWORD), verify=False, )
+        return response.status_code
+    except requests.exceptions.RequestException as re:
+        logger.info("Error reading service \"" + name + "\" from Insights")
+        logger.exception(re)
+        result = False
+# end of def get_service_status
+
+def set_svc_status(id, status):
+    result = True # set to by exception handler
+    url = CACHET_URL + "/" + str(id)
+
+    try:
+        # change status to "Unknown" temporarily before setting the actual status.
+        # reason: timestampp is not updated, when before and after status remains the same.
+        ret = session.put(url, data={"status": 0}, verify=False)
+        ret = session.get(url, verify=False)
+
+        # now set the actual status
+        if (status >= 200 and status <= 299): # check for >199 and <300
+            actual_status={"status": 1 }
+        else:
+            actual_status={"status": 4 }
+        ret = session.put(url, data=actual_status, verify=False)
+        ret = session.get(url, verify=False)
+    except requests.exceptions.RequestException as re:
+        logging.error("Return Code = %s", str(ret.status_code) + " by resetting or updating the status")
+        logger.exception(re)
+        result = False
+    return result
+# end of def set_svc_status
 
 def main():
-    logger.info ("Using logger to get started!")
-    logger.info (check_status())
-
-# end of main function
+    update_all_services()
 
 if __name__ == '__main__':
-    main()
+   logger.info ("Let's kick the pig!")
+   main()
