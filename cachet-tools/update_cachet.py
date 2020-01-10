@@ -100,7 +100,7 @@ def set_svc_status(id, status):
 def main():
     while True:
         update_all_services()
-        logger.info("Goging to sleep for 5 minutes ...")
+        logger.info("Going to sleep for 5 minutes ...")
         time.sleep(300)
 
 if __name__ == '__main__':
