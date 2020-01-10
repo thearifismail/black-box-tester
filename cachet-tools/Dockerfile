@@ -32,4 +32,4 @@ ENV PYTHONWARNINGS=$PYTHONWARNINGS
 
 # Executed once image is up / container is created
 CMD ["ls -l /"]
-CMD ["python",=/update_cachet.py"]
+CMD ["python", "/update_cachet.py"]
