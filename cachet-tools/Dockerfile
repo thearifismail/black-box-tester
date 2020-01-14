@@ -12,7 +12,6 @@ CMD ["ls -l /"]
 RUN pip install --no-cache-dir -r /requirements.txt
 
 # copy file into place
-# COPY cachet_update_daemon.py / 
 COPY update_cachet.py /
 
 # Arif's project
