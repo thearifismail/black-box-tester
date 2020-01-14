@@ -52,7 +52,7 @@ def update_all_services():
                     logger.info("Successfully updated status of \"" + component['name'] + "\" service")
                 else:
                     logger.error("Failed to updated status of \"" + component['name'] + "\" service")
-            time.sleep(2) 
+                time.sleep(2) 
             # end of for components loop
         # end of for groups loop
     except Exception as ex:
