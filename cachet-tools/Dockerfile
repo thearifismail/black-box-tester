@@ -15,9 +15,6 @@ RUN pip install --no-cache-dir -r /requirements.txt
 # COPY cachet_update_daemon.py / 
 COPY update_cachet.py /
 
-# Expose the port
-EXPOSE 10000
-
 # Arif's project
 ENV CACHET_HOSTNAME=$CACHET_HOSTNAME
 ENV CACHET_TOKEN=$CACHET_TOKEN
