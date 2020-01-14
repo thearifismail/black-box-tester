@@ -52,6 +52,7 @@ def update_all_services():
                     logger.info("Successfully updated status of \"" + component['name'] + "\" service")
                 else:
                     logger.error("Failed to updated status of \"" + component['name'] + "\" service")
+            time.sleep(2) 
             # end of for components loop
         # end of for groups loop
     except Exception as ex:
@@ -66,6 +67,7 @@ def get_service_status(name):
     url = API_URL + "/" + name + "/v1/"
     try:
         response = session.get(url, auth=(INSIGHTS_USERNAME, INSIGHTS_PASSWORD), verify=False, )
+        logger.info(str(response.status_code) + " received from " + url)
         return response.status_code
     except requests.exceptions.RequestException as re:
         logger.info("Error reading service \"" + name + "\" from Insights")
