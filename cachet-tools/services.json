@@ -1,0 +1,13 @@
+{
+    "services": [
+        {
+            "name": "cost-management",
+            "label": "Cost Management",
+            "uri": "cost-management/v1/"
+        }, {
+            "name": "approval",
+            "label": "Approval",
+            "uri": "approval/v1.0/openapi.json"
+        }
+    ]
+}
