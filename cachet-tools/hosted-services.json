@@ -1,9 +1,9 @@
 {
-    "services": [
+    "Cloud Application Services": [
         {
             "name": "cost-management",
             "label": "Cost Management",
-            "uri": "cost-management/v1/"
+            "uri": "cost-management/v1/openapi.json"
         }, {
             "name": "approval",
             "label": "Approval",

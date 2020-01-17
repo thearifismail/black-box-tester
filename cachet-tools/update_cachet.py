@@ -5,10 +5,12 @@ latest status.
 """
 
 import json
-import os
 import logging
+import os
 import requests
 import time
+
+from services import Services
 
 # target cachet listing insights services 
 CACHET_HOSTNAME = os.environ.get("CACHET_HOSTNAME")
@@ -27,7 +29,8 @@ logging.basicConfig(level='INFO', format='%(asctime)s %(message)s', datefmt='%m/
 logger = logging.getLogger(__name__)
 
 # session used by every request, only URLs and args will change
-session = requests.Session()
+session  = requests.Session()
+services = Services()
 
 def update_all_services():
     logger.info("Starting services status check ...")
@@ -35,7 +38,6 @@ def update_all_services():
     # session = requests.Session()
     session.headers.update(HEADERS)
 
-    # TODO:  add exception handling and check if except: can catch every exception if none specified to catch
     try:
         response = session.get(CACHET_URL + "/groups", verify=False)
         groups   = response.json()['data']
@@ -64,24 +66,26 @@ def update_all_services():
 
 def get_service_status(name):
     result = True # set to False if exception thrown
-    url = API_URL + "/" + name + "/v1/"
+    uri    = services.getServiceUriByLabel(name)
+    url    = API_URL + "/" + uri
     try:
         response = session.get(url, auth=(INSIGHTS_USERNAME, INSIGHTS_PASSWORD), verify=False, )
         logger.info(str(response.status_code) + " received from " + url)
-        return response.status_code
+        result = response.status_code
     except requests.exceptions.RequestException as re:
         logger.info("Error reading service \"" + name + "\" from Insights")
         logger.exception(re)
         result = False
+    return result
 # end of def get_service_status
 
 def set_svc_status(id, status):
-    result = True # set to by exception handler
-    url = CACHET_URL + "/" + str(id)
+    result = True # set to False by the exception handler
+    url    = CACHET_URL + "/" + str(id)
 
     try:
         # change status to "Unknown" temporarily before setting the actual status.
-        # reason: timestampp is not updated, when before and after status remains the same.
+        # reason: time-stamp is not updated in cachet, when before and after status is the same.
         ret = session.put(url, data={"status": 0}, verify=False)
         ret = session.get(url, verify=False)
 

@@ -13,9 +13,8 @@ class Services:
     groupcount   = 0
     serviceCount = 0
 
-    # def __init__(self, filepath='./cachet-tools/nested-services.json'):
     def __init__(self):
-        with open('cachet-tools/nested-services.json') as services_file:
+        with open('cachet-tools/hosted-services.json') as services_file:
             self.data = json.load(services_file)
             Services.groupcount = len(self.data)
             print("Group count: " + str(Services.groupcount))
@@ -26,14 +25,14 @@ class Services:
         return self.data
     
     def getServiceNameByLabel(self, label):
-        for group, services in self.data.items():
+        for g, services in self.data.items():
             for svc in services:
                 if svc['label'] == label:
                     return svc['name']
     # end of getServiceByLabel
 
     def getServiceUriByLabel(self, label):
-        for group, services in self.data.items():
+        for g, services in self.data.items():
             for svc in services:
                 if svc['label'] == label:
                     return svc['uri']
