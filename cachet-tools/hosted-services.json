@@ -1,13 +1,94 @@
 {
     "Cloud Application Services": [
         {
-            "name": "cost-management",
-            "label": "Cost Management",
-            "uri": "cost-management/v1/openapi.json"
+            "name": "apicast-tests",
+            "label": "APICast Tests",
+            "uri": "apicast-tests/v1.0/openapi.json"
         }, {
             "name": "approval",
             "label": "Approval",
             "uri": "approval/v1.0/openapi.json"
+        }, {
+            "name": "automation-hub",
+            "label": "Automation Hub",
+            "uri": "automation-hub/v1/"
+        }, {
+            "name": "catalog",
+            "label": "Catalog",
+            "uri": "catalog/v1.0/openapi.json"
+        }, {
+            "name": "compliance",
+            "label": "Compliance",
+            "uri": "compliance/v1/openapi.json"
+        }, {
+            "name": "cost-management",
+            "label": "Cost Management",
+            "uri": "cost-management/v1/openapi.json"
+        }, {
+            "name":  "drift",
+            "label": "Drift",
+            "uri":   "drift/v1/openapi.json"
+        }, {
+            "name":  "entitlements",
+            "label": "Entitlements",
+            "uri":   "entitlements/v1/services"
+        }, {
+            "name":  "hooks",
+            "label": "Hooks",
+            "uri":   "hooks/v1/"
+        }, {
+            "name":  "ingress",
+            "label": "Ingress",
+            "uri":   "ingress/v1/"
+        }, {
+            "name":  "insights/v1/",
+            "label": "Insights",
+            "uri":   "insights/v1/"
+        }, {
+            "name":  "inventory",
+            "label": "Inventory",
+            "uri":   "inventory/v1/openapi.json" 
+        }, {
+            "name":  "rbac",
+            "label": "Rbac",
+            "uri":   "rbac/v1/"
+        }, {
+            "name":  "remediations",
+            "label": "Remediations",
+            "uri":   "remediations/v1/"
+        }, {
+            "name":  "rhsm-subscriptions",
+            "label": "RHSM Subscriptions",
+            "uri":   "rhsm-subscriptions/v1/openapi.json" 
+        }, {
+            "name":  "sources",
+            "label": "Sources",
+            "uri":   "sources/v1.0/openapi.json"
+        }, {
+            "name":  "subscriptions",
+            "label": "Subscriptions",
+            "uri":   "subscriptions/v1/"
+        }, {
+            "name":  "system-baseline",
+            "label": "System Baseline",
+            "uri":   "system-baseline/v1/openapi.json"
+        }, {
+            "name":  "topological-inventory",
+            "label": "Topological Inventory",
+            "uri":   "topological-inventory/v1.0/openapi.json"
+        }, {
+            "name":  "tower-analytics",
+            "label": "Tower Analytics",
+            "uri"  : "tower-analytics/v1/openapi.json"
+        }, {
+            "name":  "vulnerability",
+            "label": "Vulnerability",
+            "uri"  : "vulnerability/v1/openapi.json"
+        }, {
+            "name":  "webhooks",
+            "label": "Webhooks",
+            "uri"  : "webhooks/v1/openapi.json"
         }
     ]
 }
+

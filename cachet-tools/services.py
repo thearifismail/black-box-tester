@@ -14,7 +14,7 @@ class Services:
     serviceCount = 0
 
     def __init__(self):
-        with open('cachet-tools/hosted-services.json') as services_file:
+        with open('/hosted-services.json') as services_file:
             self.data = json.load(services_file)
             Services.groupcount = len(self.data)
             print("Group count: " + str(Services.groupcount))
