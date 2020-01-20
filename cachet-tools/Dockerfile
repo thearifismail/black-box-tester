@@ -5,14 +5,21 @@ FROM docker.io/centos/python-36-centos7
 # who are you
 MAINTAINER aarif
 
-COPY requirements.txt /
+# copy file into place
+COPY update_cachet.py /
+COPY services.py /
+COPY hosted-services.json / 
+COPY populate-cachet.py /
+COPY purge-cachet.py /
+COPY requirements.txt / 
 CMD ["ls -l /"]
 
 # Run when creating image
 RUN pip install --no-cache-dir -r /requirements.txt
 
-# copy file into place
-COPY update_cachet.py /
+
+# Expose the port
+# EXPOSE 10000
 
 # Arif's project
 ENV CACHET_HOSTNAME=$CACHET_HOSTNAME
