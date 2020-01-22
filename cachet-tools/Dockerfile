@@ -17,10 +17,6 @@ CMD ["ls -l /"]
 # Run when creating image
 RUN pip install --no-cache-dir -r /requirements.txt
 
-
-# Expose the port
-# EXPOSE 10000
-
 # Arif's project
 ENV CACHET_HOSTNAME=$CACHET_HOSTNAME
 ENV CACHET_TOKEN=$CACHET_TOKEN
