@@ -21,17 +21,17 @@ class Services:
             
     # end of init
 
-    def getData(self):
+    def get_data(self):
         return self.data
     
-    def getServiceNameByLabel(self, label):
+    def get_service_name_by_label(self, label):
         for g, services in self.data.items():
             for svc in services:
                 if svc['label'] == label:
                     return svc['name']
     # end of getServiceByLabel
 
-    def getServiceUriByLabel(self, label):
+    def get_service_uri_by_label(self, label):
         for g, services in self.data.items():
             for svc in services:
                 if svc['label'] == label:
@@ -41,8 +41,8 @@ class Services:
 
 def main():
     svcs  = Services()
-    name  = svcs.getServiceNameByLabel("3Scale")
-    uri   = svcs.getServiceUriByLabel("3Scale")
+    name  = svcs.get_service_name_by_label("3Scale")
+    uri   = svcs.get_service_uri_by_label("3Scale")
 
     pp.pprint(name)
     pp.pprint(uri)

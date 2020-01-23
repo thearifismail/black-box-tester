@@ -48,7 +48,7 @@ def update_all_services():
             logger.info("Starting to check each of " + str(len(components)) + " components in group \"" + group['name'] + "\"")
             for component in components:
                 # assuming the component in the parent group is accessible because it showed up.
-                svc_status = get_service_status(component['name'])
+                svc_status = determine_status(component['name'])
                 update_svc = set_svc_status(component['id'], svc_status)
                 if update_svc:
                     logger.info("Successfully updated status of \"" + component['name'] + "\" service")
@@ -64,9 +64,9 @@ def update_all_services():
     logger.info("Done updating all services!!!")
 # end of def update_all_services
 
-def get_service_status(name):
+def determine_status(name):
     result = True # set to False if exception thrown
-    uri    = services.getServiceUriByLabel(name)
+    uri    = services.get_service_uri_by_label(name)
     url    = API_URL + "/" + uri
     try:
         response = session.get(url, auth=(INSIGHTS_USERNAME, INSIGHTS_PASSWORD), verify=False, )
@@ -77,7 +77,7 @@ def get_service_status(name):
         logger.exception(re)
         result = False
     return result
-# end of def get_service_status
+# end of def determine_status
 
 def set_svc_status(id, status):
     result = True # set to False by the exception handler
@@ -95,7 +95,6 @@ def set_svc_status(id, status):
         else:
             actual_status={"status": 4 }
         ret = session.put(url, data=actual_status, verify=False)
-        ret = session.get(url, verify=False)
     except requests.exceptions.RequestException as re:
         logging.error("Return Code = %s", str(ret.status_code) + " by resetting or updating the status")
         logger.exception(re)
